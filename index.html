@@ -257,6 +257,74 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opac
  .stage.hot,.stage.degraded,.division-agent.working,.commander-core.working,.event-row:first-child,.report-card:first-child,.inbox-item:first-child,.health-node,.brain-link,.story-flow i,.event-row .event-dot,.stage:before,.stage:after,.division-agent:before{animation:none!important}
 }
 
+
+/* ===== KZEL PIPELINE + POLISH PASS v5.2 ===== */
+:root{--agent-vector:#5ba8ff;--agent-sentinel:#58d69a;--agent-signal:#b596ff;--agent-forge:#ffb45b;--agent-shadow:#77d6e8;--agent-redteam:#ff777f}
+/* Stable scroll/focus: live rerenders must never behave like camera moves. */
+.pipeline{scroll-behavior:auto;overscroll-behavior-x:contain;scroll-snap-type:none;anchor-name:none;position:relative}
+.stage{overflow:hidden;isolation:isolate}.stage:before{content:"";position:absolute;inset:auto 12% 0;height:2px;background:linear-gradient(90deg,transparent,var(--stage-accent,#8d99a7),transparent);opacity:0;transform:translateX(-75%);pointer-events:none}
+.stage.stage-update{border-color:color-mix(in srgb,var(--stage-accent,#8d99a7) 62%,#39434f);animation:kzelStageArrive .62s cubic-bezier(.2,.75,.25,1)}
+.stage.stage-update:before{opacity:.8;animation:kzelStageFlow .78s ease-out}
+.stage.stage-qualified{--stage-accent:var(--green);box-shadow:0 0 0 1px rgba(71,220,135,.13),0 0 24px rgba(71,220,135,.08)}
+.stage.stage-rejected{--stage-accent:var(--red)}.stage.stage-deferred{--stage-accent:var(--amber)}.stage.stage-rate{--stage-accent:var(--amber)}
+.stage-update-badge{position:absolute;right:6px;top:6px;min-width:15px;height:15px;padding:0 4px;border-radius:999px;border:1px solid #405063;background:#111821;color:#cbd6e2;font-size:6px;display:grid;place-items:center;animation:kzelBadgeIn .3s ease-out}
+@keyframes kzelStageArrive{0%{transform:translateY(3px);filter:brightness(1)}45%{transform:translateY(-2px);filter:brightness(1.22)}100%{transform:none;filter:none}}
+@keyframes kzelStageFlow{from{transform:translateX(-90%)}to{transform:translateX(90%)}}
+@keyframes kzelBadgeIn{from{opacity:0;transform:scale(.75)}to{opacity:1;transform:scale(1)}}
+/* Purposeful candidate-card outcomes */
+.token-card{will-change:transform,opacity}.token-card[data-transition="advanced"]{animation:kzelCandidateAdvance .45s ease-out}.token-card[data-transition="deferred"]{animation:kzelCandidateWait .8s ease-out}.token-card[data-transition="rejected"]{animation:kzelCandidateReject .48s ease-out}.token-card[data-transition="qualified"]{animation:kzelCandidateQualify .6s ease-out}
+@keyframes kzelCandidateAdvance{0%{opacity:.45;transform:translateX(-7px)}100%{opacity:1;transform:none}}
+@keyframes kzelCandidateWait{50%{border-color:#755c31;box-shadow:inset 0 0 0 1px rgba(244,180,77,.08)}}
+@keyframes kzelCandidateReject{45%{opacity:.55;transform:translateX(4px)}100%{opacity:1;transform:none}}
+@keyframes kzelCandidateQualify{0%{box-shadow:0 0 0 rgba(71,220,135,0)}45%{border-color:#3b8a61;box-shadow:0 0 28px rgba(71,220,135,.12)}100%{box-shadow:none}}
+/* Premium progress bars: motion only when state changes / view reveals. */
+.progress{position:relative;height:6px;background:#141a20;border:1px solid rgba(255,255,255,.025)}
+.progress span{position:relative;background:linear-gradient(90deg,#36c978,#66e2a0,#d9eee3);transition:width .58s cubic-bezier(.2,.72,.25,1);overflow:hidden}
+.progress span:after{content:"";position:absolute;top:0;right:0;width:18px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.58));opacity:.32;transform:translateX(45%)}
+.progress[data-complete="true"] span{box-shadow:0 0 9px rgba(71,220,135,.16)}
+/* Agent identities */
+.agent-avatar,.mini-agent-avatar{--agent-color:#8d99a7;border:1px solid color-mix(in srgb,var(--agent-color) 60%,#26303a);background:color-mix(in srgb,var(--agent-color) 8%,#0a0d10);color:var(--agent-color);display:grid;place-items:center;flex:0 0 auto;position:relative;isolation:isolate}
+.agent-avatar{width:38px;height:38px;border-radius:10px}.mini-agent-avatar{width:25px;height:25px;border-radius:8px}
+.agent-avatar svg,.mini-agent-avatar svg{width:58%;height:58%;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.agent-avatar.working:after,.mini-agent-avatar.working:after{content:"";position:absolute;inset:-4px;border:1px solid color-mix(in srgb,var(--agent-color) 75%,transparent);border-radius:inherit;animation:kzelAgentRing 1.8s ease-in-out infinite;pointer-events:none}
+.agent-avatar.waiting:after{animation-duration:3.2s}.agent-avatar.failed{--agent-color:var(--red)!important}
+@keyframes kzelAgentRing{0%,100%{opacity:.18;transform:scale(.96)}50%{opacity:.65;transform:scale(1.06)}}
+.division-agent{--agent-color:#8d99a7;border-color:color-mix(in srgb,var(--agent-color) 25%,#28313a)}.division-agent.working{border-color:color-mix(in srgb,var(--agent-color) 62%,#28313a);box-shadow:0 0 24px color-mix(in srgb,var(--agent-color) 9%,transparent)}
+.division-agent .agent-title-line{display:flex;gap:9px;align-items:center}.division-agent .agent-pulse{background:var(--agent-color)!important}.division-agent.working .agent-pulse{box-shadow:0 0 0 4px color-mix(in srgb,var(--agent-color) 9%,transparent)}
+.agent-detail .agent-title-line{display:flex;align-items:center;gap:9px}.agent-detail{border-top:2px solid color-mix(in srgb,var(--agent-color,#8d99a7) 45%,#252d37)}
+/* Health state language */
+.health-link{stroke:#31404c;stroke-width:.28;stroke-dasharray:1.5 1;animation:kzelHealthFlow 6s linear infinite}.health-link.healthy{stroke:#3d7d61;animation-duration:4.8s}.health-link.degraded{stroke:#806738;animation-duration:8s}.health-link.rate_limited{stroke:#9b7937;stroke-dasharray:.8 2.4;animation:kzelHealthCooldown 2.4s steps(4,end) infinite}.health-link.offline{stroke:#4d3436;stroke-dasharray:none;animation:none;opacity:.35}
+@keyframes kzelHealthFlow{to{stroke-dashoffset:-12}}@keyframes kzelHealthCooldown{50%{opacity:.35}}
+.health-node,.service{transition:border-color .3s ease,box-shadow .3s ease,opacity .3s ease,background .3s ease}.health-node.healthy span,.service.healthy .tag{color:var(--green)}.health-node.healthy{box-shadow:0 0 18px rgba(71,220,135,.035)}
+.health-node.degraded,.service.degraded{animation:kzelHealthWarn 3.4s ease-in-out infinite}.health-node.rate_limited,.service.rate_limited{animation:kzelCooldownBreath 2.5s ease-in-out infinite}.health-node.offline,.service.offline{opacity:.62;filter:saturate(.55)}
+@keyframes kzelHealthWarn{50%{box-shadow:0 0 0 2px rgba(244,180,77,.055),0 0 18px rgba(244,180,77,.045)}}@keyframes kzelCooldownBreath{50%{border-color:#8c6c32}}
+/* Intelligence briefing */
+.intel-brief{border:1px solid #28323d;border-radius:18px;background:linear-gradient(160deg,#0b0f13,#07090b);overflow:hidden}.intel-brief-head{display:grid;grid-template-columns:1fr auto;gap:18px;padding:18px;border-bottom:1px solid #202833}.intel-brief-head h2{font-size:21px;margin:5px 0 7px}.confidence-dial{width:92px;height:92px;border-radius:50%;border:1px solid #3e4d5c;display:grid;place-content:center;text-align:center;background:radial-gradient(circle,rgba(71,220,135,.055),transparent 60%)}.confidence-dial b{font-size:25px}.confidence-dial small{font-size:7px;color:var(--muted)}.brief-sequence{display:grid;grid-template-columns:repeat(4,1fr);gap:0}.brief-step{padding:14px;border-right:1px solid #1f2730;animation:kzelBriefReveal .38s both}.brief-step:nth-child(2){animation-delay:.05s}.brief-step:nth-child(3){animation-delay:.1s}.brief-step:nth-child(4){animation-delay:.15s}.brief-step:last-child{border:0}.brief-step b{font-size:8px;letter-spacing:.12em;color:#7f8b98}.brief-step p{font-size:9px;line-height:1.55;color:#adb5bf;margin:7px 0 0}@keyframes kzelBriefReveal{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+/* Weekly evidence: responsive evidence cards rather than forced desktop table. */
+.weekly-evidence-grid{display:grid;grid-template-columns:repeat(7,minmax(105px,1fr));gap:8px}.week-card{border:1px solid #202832;border-radius:11px;background:#090c0f;padding:10px;min-width:0}.week-card h4{font-size:9px;margin:0 0 8px}.week-primary{font-size:20px;font-weight:900}.week-sub{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.week-sub span{font-size:7px;color:#7e8995}.week-sub b{display:block;color:#d3d8de;font-size:9px;margin-top:2px}.week-trend{height:3px;background:#151b21;border-radius:99px;margin-top:8px;overflow:hidden}.week-trend i{display:block;height:100%;background:var(--green);width:var(--trend);transition:width .5s ease}
+/* Incident response cards */
+.incident-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.incident-card{border:1px solid #26303a;border-left:2px solid var(--incident-color,#718091);background:#090c0f;border-radius:12px;padding:12px}.incident-card.active{--incident-color:var(--amber)}.incident-card.resolved{--incident-color:var(--green)}.incident-card.critical{--incident-color:var(--red)}.incident-top{display:flex;justify-content:space-between;gap:8px}.incident-top h3{font-size:11px;margin:4px 0}.incident-meta{font-size:7px;color:#7f8995}.incident-summary{font-size:9px;line-height:1.5;color:#a7b0ba;margin:8px 0}.incident-facts{display:grid;grid-template-columns:1fr 1fr;gap:6px}.incident-fact{border-top:1px solid #1e252d;padding-top:6px}.incident-fact span{font-size:6px;color:#707b87;display:block}.incident-fact b{font-size:8px;font-weight:600;display:block;margin-top:2px}.incident-more{margin-top:8px;border:0;background:transparent;color:#93a0ad;padding:0;font-size:7px;text-decoration:underline;text-underline-offset:3px}
+/* Attention hierarchy */
+.commander-card.attention-required{border-color:#705b34;box-shadow:0 0 0 1px rgba(244,180,77,.045),0 12px 30px rgba(0,0,0,.22);position:relative;overflow:hidden}.commander-card.attention-required:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--amber);animation:kzelAttention 2.8s ease-in-out infinite}.commander-card.attention-required h3:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--amber);margin-right:8px;box-shadow:0 0 0 4px rgba(244,180,77,.06)}@keyframes kzelAttention{50%{opacity:.35}}
+.attention-level{display:inline-flex;align-items:center;gap:5px;font-size:7px;padding:4px 6px;border:1px solid #36404b;border-radius:999px;color:#9ca6b1}.attention-level.action{color:var(--amber);border-color:#604d2e}.attention-level.critical{color:var(--red);border-color:#623137}
+/* Buttons + pages */
+.primary,.btn,.ghost,.health-node{transition:transform .14s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease}.primary:active,.btn:active,.ghost:active,.health-node:active{transform:scale(.975)}
+.content.page-enter>*{animation:kzelPageIn .24s ease both}.content.page-enter>*:nth-child(2){animation-delay:.02s}.content.page-enter>*:nth-child(3){animation-delay:.04s}@keyframes kzelPageIn{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media(max-width:1180px){.weekly-evidence-grid{grid-template-columns:repeat(4,minmax(120px,1fr))}.brief-sequence{grid-template-columns:1fr 1fr}.brief-step:nth-child(2){border-right:0}.brief-step{border-bottom:1px solid #1f2730}}
+@media(max-width:780px){.weekly-evidence-grid{display:flex;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:4px}.week-card{min-width:178px;scroll-snap-align:start}.intel-brief-head{grid-template-columns:1fr}.confidence-dial{width:72px;height:72px}.brief-sequence{grid-template-columns:1fr}.brief-step{border-right:0;border-bottom:1px solid #1f2730}.incident-grid{grid-template-columns:1fr}.incident-facts{grid-template-columns:1fr}.health-link{animation:none}.health-node.degraded,.service.degraded,.health-node.rate_limited,.service.rate_limited{animation-duration:4.5s}.agent-avatar.working:after,.mini-agent-avatar.working:after{animation-duration:2.6s}.content.page-enter>*{animation-duration:.18s}}
+@media(prefers-reduced-motion:reduce){.stage.stage-update,.stage.stage-update:before,.stage-update-badge,.token-card[data-transition],.health-link,.health-node,.service,.agent-avatar:after,.mini-agent-avatar:after,.brief-step,.commander-card.attention-required:before,.content.page-enter>*{animation:none!important;transition:none!important}}
+
+/* Investigation modal summary: four facts use four real columns rather than the global six-column dashboard grid.
+   This is the root fix for COMPLETED being clipped/truncated in the Status card. */
+.investigation-modal>.metrics{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.investigation-modal>.metrics>.card{min-width:0;overflow:hidden}
+.investigation-modal>.metrics .value{font-size:17px;line-height:1.08;white-space:nowrap;overflow:visible;text-overflow:clip;letter-spacing:-.015em}
+.investigation-modal>.metrics .note{white-space:normal}
+@media(max-width:780px){
+ .investigation-modal>.metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .investigation-modal>.metrics .value{font-size:18px;white-space:normal;overflow-wrap:anywhere;text-overflow:clip}
+}
+
 </style>
 </head>
 <body>
@@ -278,7 +346,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opac
         <div class="search-wrap"><input id="globalSearch" class="search-input" placeholder="Search token, task, memory..." style="width:230px"></div>
         <span class="badge">PROTOTYPE</span>
         <span class="badge good" id="healthBadge">HEALTHY</span>
-        <button class="ghost" id="topCaptureBtn">＋ Capture</button><button class="primary" id="talkBtn">Talk to KZEL</button>
+        <button class="ghost" id="topCaptureBtn">＋ Capture</button><button class="primary" id="talkBtn">Talk to Commander</button>
       </div>
       <div class="search-results" id="searchResults"></div>
     </header>
@@ -809,7 +877,7 @@ function renderSearch(q){
 
 function advanceCandidate(){
  if(state.services.DEX.status==="RATE_LIMITED"){
-  state.services.DEX.cooldown=Math.max(20,state.services.DEX.cooldown||45);addAudit("DEX_RATE_LIMIT","Candidate processing deferred by global DEX cooldown");save();render();toast("DEX rate limited — candidate deferred");return;
+  state.services.DEX.cooldown=Math.max(20,state.services.DEX.cooldown||45);const waiting=state.candidates.find(c=>c.status==="ACTIVE"&&["TRADEABILITY","MARKET"].includes(c.stage));if(typeof KZEL_UI!=="undefined")markPipelineOutcome(waiting?.stage||"MARKET","deferred",waiting);addAudit("DEX_RATE_LIMIT","Candidate processing deferred by global DEX cooldown");save();render();toast("DEX rate limited — candidate waiting in cooldown");return;
  }
  const c=state.candidates.find(c=>c.status==="ACTIVE" || (c.status==="QUALIFIED" && ["QUALIFIED","PUSHOVER"].includes(c.stage)));
  if(!c){toast("No ACTIVE candidate to advance");return}
@@ -1036,7 +1104,7 @@ NAV.splice(0, NAV.length,
 );
 
 function ensureAutonomyState(){
- state.osVersion="AUTONOMOUS_OS_V5";
+ state.osVersion="AUTONOMOUS_OS_V5_2";
  state.autonomy=state.autonomy||{enabled:true,lastGoalReview:0,lastHealthReview:0};
  state.liveEvents=state.liveEvents||[];
  state.reports=state.reports||[];
@@ -1352,12 +1420,72 @@ setService=function(name,status){_setService(name,status);addLiveEvent('HEALTH',
 const _simStep=simStep;
 simStep=function(){_simStep();progressOrchestration();autonomousHealthWatch();autonomousGoalWatch();save();render();};
 
+
+/* ===== KZEL PIPELINE + POLISH PASS v5.2 runtime ===== */
+const KZEL_UI={pipelineScrollLeft:0,mainScrollTop:0,windowScrollY:window.scrollY||0,stageUpdates:{},candidateTransition:{},view:null,userPipelineInteracted:false};
+document.addEventListener('scroll',e=>{if(e.target?.classList?.contains('pipeline')){KZEL_UI.pipelineScrollLeft=e.target.scrollLeft;KZEL_UI.userPipelineInteracted=true}if(e.target?.classList?.contains('main'))KZEL_UI.mainScrollTop=e.target.scrollTop;if(e.target===document||e.target===document.documentElement)KZEL_UI.windowScrollY=window.scrollY||0},true);window.addEventListener('scroll',()=>{KZEL_UI.windowScrollY=window.scrollY||0},{passive:true});
+const AGENT_VISUAL={
+ market:{color:'var(--agent-vector)',icon:'<svg viewBox="0 0 24 24"><path d="M3 16l4-5 4 3 5-8 5 4"/><path d="M3 20h18"/></svg>'},
+ security:{color:'var(--agent-sentinel)',icon:'<svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-5"/></svg>'},
+ social:{color:'var(--agent-signal)',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M7 7a7 7 0 010 10M17 7a7 7 0 010 10M4 4a11 11 0 010 16M20 4a11 11 0 010 16"/></svg>'},
+ ops:{color:'var(--agent-forge)',icon:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 12h5M8 15h8"/></svg>'},
+ learning:{color:'var(--agent-shadow)',icon:'<svg viewBox="0 0 24 24"><path d="M4 18V9M9 18V5M14 18v-7M19 18V7"/><path d="M3 20h18"/></svg>'},
+ risk:{color:'var(--agent-redteam)',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 8v5M12 16h.01"/><path d="M6 6l12 12"/></svg>'}
+};
+function agentVisual(id){return AGENT_VISUAL[id]||{color:'#8d99a7',icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg>'}}
+function agentAvatar(id,status='IDLE',mini=false){const v=agentVisual(id);const stateClass=String(status).toLowerCase();return `<span class="${mini?'mini-agent-avatar':'agent-avatar'} ${stateClass}" style="--agent-color:${v.color}">${v.icon}</span>`}
+function progressBar(v){const n=Math.max(0,Math.min(100,Number(v)||0));return `<div class="progress" data-complete="${n>=99}"><span style="width:${n}%"></span></div>`}
+function notePipelineTransition(c,from,to){
+ if(!c||from===to)return;let kind='advanced';
+ if(c.status==='REJECTED'||to==='REJECTED')kind='rejected';else if(to==='QUALIFIED'||c.status==='QUALIFIED')kind='qualified';else if(state.services.DEX?.status==='RATE_LIMITED'&&['TRADEABILITY','MARKET'].includes(to))kind='deferred';
+ KZEL_UI.candidateTransition[c.id]={kind,at:Date.now()};KZEL_UI.stageUpdates[to]={kind,at:Date.now(),count:(KZEL_UI.stageUpdates[to]?.count||0)+1};
+}
+function transitionForCandidate(c){const t=KZEL_UI.candidateTransition[c.id];return t&&Date.now()-t.at<1600?t.kind:''}
+function renderTokenCard(c){return `<div class="token-card" data-open-token="${c.id}" data-transition="${transitionForCandidate(c)}"><div class="token-head"><div class="token-id"><div><b>${c.name} / ${c.symbol}</b><span>${c.network} · ${c.ageMin}m</span></div></div>${tag(c.status,statusClass(c.status))}</div><div class="scoreline"><div class="mini"><b>${c.opportunity}</b><span>OPP</span></div><div class="mini"><b>${c.entry}</b><span>ENTRY</span></div><div class="mini"><b>${c.safety||"—"}</b><span>SAFE</span></div><div class="mini"><b>${c.remaining}</b><span>LEFT</span></div></div><div class="note">${STAGE_LABEL[c.stage]} · Liq ${money(c.liquidity)} · MC ${money(c.marketCap)}</div></div>`}
+function renderPipeline(){
+ const counts=funnelCounts();return `<div class="pipeline" id="candidatePipeline">${STAGES.map(s=>{const serviceBad=s==='MARKET'&&state.services.DEX.status==='RATE_LIMITED';const active=state.candidates.some(c=>c.stage===s&&['ACTIVE','WATCH'].includes(c.status));const u=KZEL_UI.stageUpdates[s];const recent=u&&Date.now()-u.at<1800;const extra=recent?`stage-update stage-${u.kind}`:'';return `<div class="stage ${serviceBad?'degraded stage-rate':active?'hot':''} ${extra}" style="--stage-accent:${s==='QUALIFIED'?'var(--green)':serviceBad?'var(--amber)':'#8d99a7'}"><div class="ico">${iconForStage(s)}</div><b>${STAGE_LABEL[s]}</b><strong>${counts[s]}</strong><small>${serviceBad?'COOLDOWN':'stage count'}</small>${recent?`<span class="stage-update-badge">${u.count>1?u.count:'+'}</span>`:''}</div>`}).join('')}</div>`;
+}
+// Preserve user-controlled viewport during live state rerenders.
+const _kzelRenderBase=render;
+render=function(){
+ const beforeView=state.activeView;const sameView=KZEL_UI.view===beforeView;
+ // Capture user position into durable runtime state only when a real rendered node exists.
+ const mainBefore=document.querySelector('.main'),pipeBefore=document.getElementById('candidatePipeline');
+ if(mainBefore&&sameView)KZEL_UI.mainScrollTop=mainBefore.scrollTop;
+ if(sameView)KZEL_UI.windowScrollY=window.scrollY||KZEL_UI.windowScrollY||0;
+ if(pipeBefore&&sameView&&KZEL_UI.userPipelineInteracted)KZEL_UI.pipelineScrollLeft=pipeBefore.scrollLeft;
+ _kzelRenderBase();
+ const content=document.getElementById('content');if(content){content.classList.remove('page-enter');void content.offsetWidth;if(!sameView)content.classList.add('page-enter')}
+ requestAnimationFrame(()=>{const m=document.querySelector('.main'),p=document.getElementById('candidatePipeline');if(m&&sameView)m.scrollTop=KZEL_UI.mainScrollTop;if(sameView&&window.scrollY!==KZEL_UI.windowScrollY)window.scrollTo({top:KZEL_UI.windowScrollY,left:0,behavior:'instant'});if(p&&sameView&&KZEL_UI.userPipelineInteracted)p.scrollLeft=KZEL_UI.pipelineScrollLeft;});
+ if(!sameView){KZEL_UI.mainScrollTop=0;KZEL_UI.windowScrollY=0;KZEL_UI.pipelineScrollLeft=0;KZEL_UI.userPipelineInteracted=false}
+ KZEL_UI.view=beforeView;
+ const attention=[...document.querySelectorAll('.commander-card')].find(x=>x.textContent.toLowerCase().includes('need your attention'));if(attention){attention.classList.add('attention-required');const h=attention.querySelector('h3');if(h&&!attention.querySelector('.attention-level'))h.insertAdjacentHTML('afterend','<span class="attention-level action">ACTION REQUIRED</span>')}
+ const talk=document.getElementById('talkBtn');if(talk)talk.textContent='Talk to Commander';
+};
+// Track stage movement without introducing auto-scroll.
+const _kzelProcessOneStage=processCandidateOneStage;
+function markPipelineOutcome(stage,kind,c){if(!stage)return;KZEL_UI.stageUpdates[stage]={kind,at:Date.now(),count:(KZEL_UI.stageUpdates[stage]?.count||0)+1};if(c)KZEL_UI.candidateTransition[c.id]={kind,at:Date.now()}}
+processCandidateOneStage=function(c){const from=c?.stage,beforeStatus=c?.status;_kzelProcessOneStage(c);if(!c)return;if(c.status==='REJECTED'&&beforeStatus!=='REJECTED'){markPipelineOutcome(from,'rejected',c);return}if(c.status==='WATCH'&&beforeStatus!=='WATCH'&&c.stage===from){markPipelineOutcome(from,'deferred',c);return}notePipelineTransition(c,from,c.stage)};
+function renderAgents(){
+ const commander=specialistFor('commander');const specialists=state.agents.filter(a=>a.id!=='commander');return `<div class="operations-floor"><div class="floor-core"><div class="commander-core ${commander.status==='WORKING'?'working':''}"><img src="${LOGO}"><b>KZEL COMMANDER</b><span>${commander.status}</span><small>${escapeHtml(commander.task||'Monitoring operation')}</small></div></div><div class="division-ring">${specialists.map((a,i)=>{const v=agentVisual(a.id);return `<div class="division-agent pos-${i} ${a.status==='WORKING'?'working':''}" style="--agent-color:${v.color}"><div class="agent-pulse"></div><div class="agent-title-line">${agentAvatar(a.id,a.status,true)}<div><b>${a.name}</b><span>${a.division}</span></div></div><small>${escapeHtml(a.task||a.role)}</small></div>`}).join('')}</div><svg class="ops-lines" viewBox="0 0 100 100" preserveAspectRatio="none">${specialists.map((a,i)=>{const coords=[[20,18],[80,18],[12,55],[88,55],[26,86],[74,86]][i];const v=agentVisual(a.id);return `<line class="${a.status==='WORKING'?'active':''}" style="stroke:${a.status==='WORKING'?v.color:'#28323c'}" x1="50" y1="50" x2="${coords[0]}" y2="${coords[1]}"/>`}).join('')}</svg></div><div class="section-head"><h2>SPECIALIST IDENTITIES</h2><span class="note">Distinct roles and colors; deterministic scanner work remains code.</span></div><div class="agent-detail-grid">${specialists.map(a=>{const v=agentVisual(a.id);return `<div class="card agent-detail" style="--agent-color:${v.color}"><div class="agent-title-line">${agentAvatar(a.id,a.status)}<div><h3>${a.name}</h3><span class="card-kicker">${a.division}</span></div></div><p>${a.role}</p><div>${tag(a.status,statusClass(a.status))}${tag(`${a.completed||0} completed`)}</div></div>`}).join('')}</div><div class="section-head"><h2>COLLABORATION NOW</h2></div><div class="investigation-grid">${activeInvestigations().map(renderInvestigationCard).join('')||`<div class="card">No active collaborative work.</div>`}</div>`;
+}
+function renderInvestigationCard(inv){const tasks=inv.taskIds.map(id=>state.tasks.find(t=>t.id===id)).filter(Boolean);return `<div class="card investigation-card" data-open-investigation="${inv.id}"><div class="investigation-head"><div><span class="card-kicker">${inv.code} · ${inv.detectedBy}</span><h3>${escapeHtml(inv.objective)}</h3></div><div>${tag(inv.lifecycle,statusClass(inv.lifecycle))}</div></div><div class="collab-strip"><div class="cmd-node">C</div>${inv.agentIds.map(id=>{const a=specialistFor(id);return `<div class="handoff-line"></div><div class="mini-agent ${a?.status==='WORKING'?'active':''}">${agentAvatar(id,a?.status||'IDLE',true)}<b>${agentName(id)}</b><small>${a?.status||'IDLE'}</small></div>`}).join('')}</div><div class="work-list">${tasks.map(t=>`<div class="work-row"><b>${agentName(t.agentId)}</b><span>${t.lifecycle.replaceAll('_',' ')}</span>${progressBar(t.progress)}</div>`).join('')}</div>${inv.rootCause?`<div class="root-cause"><b>ROOT CAUSE</b><p>${escapeHtml(inv.rootCause)}</p></div>`:''}</div>`}
+function renderReviews(){
+ const daily=generateDailyReview(),weekly=generateWeeklyReview(),best=bestCandidate(),st=shadowStats();const recentLesson=state.memories.find(m=>m.type==='VALIDATED_LESSON');const confidence=best?Math.round((best.ai?.confidence||best.evidence||70)):72;
+ const dailyText=daily.sections.map(s=>s.text).join(' '),weeklyText=weekly.sections.map(s=>s.text).join(' ');
+ return `<div class="intel-brief"><div class="intel-brief-head"><div><span class="eyebrow">INTELLIGENCE REVIEW</span><h2>Commander operational intelligence brief</h2><p class="note">Evidence first. Interpretation is separated from recommendation and learning.</p></div><div class="confidence-dial"><b>${confidence}%</b><small>CONFIDENCE</small></div></div><div class="brief-sequence"><div class="brief-step"><b>01 · OBSERVED</b><p>${state.candidates.length} candidates observed; ${qualifiedToday()} qualified; ${openTrades().length} open Shadow sample(s).</p></div><div class="brief-step"><b>02 · EVIDENCE</b><p>${escapeHtml((dailyText||'No material daily evidence yet.').slice(0,220))}</p></div><div class="brief-step"><b>03 · CONCLUSION</b><p>${best?`${escapeHtml(best.name)} leads active opportunity ranking at ${best.opportunity}/100. ${escapeHtml(best.decisionReason)}`:'No active opportunity is strong enough to lead the brief.'}</p></div><div class="brief-step"><b>04 · ACTION / LEARNING</b><p>${escapeHtml(recentLesson?.body||'Continue controlled Shadow validation; do not promote an observation directly into production logic.')}</p></div></div></div><div class="section-head"><h2>COMMANDER ASSESSMENTS</h2></div><div class="grid two"><div class="card strategic-brief"><span class="card-kicker">DAILY ASSESSMENT</span>${reviewHtml(daily)}</div><div class="card strategic-brief"><span class="card-kicker">WEEKLY ASSESSMENT</span>${reviewHtml(weekly)}</div></div><div class="section-head"><h2>WEEKLY EVIDENCE</h2><span class="note">Main outcome first; supporting detail stays compact.</span></div><div class="weekly-evidence-grid">${state.demoDays.map(d=>{const max=Math.max(...state.demoDays.map(x=>Math.abs(x.shadowReturn)),1);const trend=Math.max(8,Math.min(100,Math.abs(d.shadowReturn)/max*100));return `<div class="week-card"><h4>${d.day}</h4><div class="week-primary ${d.shadowReturn>=0?'green':'red'}">${pct(d.shadowReturn)}</div><div class="week-sub"><span>DISCOVERED<b>${d.discovered}</b></span><span>QUALIFIED<b>${d.qualified}</b></span><span>FALSE +<b>${d.falsePositive}</b></span><span>FALSE −<b>${d.falseNegative}</b></span><span>COST<b>$${d.cost.toFixed(2)}</b></span><span>CAPTURE<b>${(d.qualified/Math.max(1,d.discovered)*100).toFixed(2)}%</b></span></div><div class="week-trend"><i style="--trend:${trend}%;background:${d.shadowReturn>=0?'var(--green)':'var(--red)'}"></i></div></div>`}).join('')}</div>`;
+}
+function renderSystem(){
+ const impacted=Object.entries(state.services).reduce((n,[name,s])=>n+(s.status==='HEALTHY'?0:(name==='DEX'?state.candidates.filter(c=>['TRADEABILITY','MARKET'].includes(c.stage)&&c.status==='ACTIVE').length:1)),0);const nodes=[['Helius',18,17],['DEX',18,50],['CoinGecko',18,83],['Database',50,15],['Queue',50,85],['AI',82,17],['X',82,50],['Pushover',82,83]];
+ return `<div class="grid metrics">${metric('Overall',serviceOverall(),'Autonomous monitor active',serviceOverall()==='HEALTHY'?'green':'amber')}${metric('Impacted',impacted,'Candidate/service impact')}${metric('Active incidents',state.incidents.filter(i=>i.status==='ACTIVE').length,'Commander-owned')}${metric('Auto response',state.autonomy.enabled?'ENABLED':'PAUSED','No production mutation','green')}</div><div class="section-head"><h2>LIVE SYSTEM ARCHITECTURE</h2><span class="note">Flow animation follows the actual demo health state.</span></div><div class="health-map"><svg viewBox="0 0 100 100">${nodes.map(([name,x,y])=>`<line class="health-link ${state.services[name].status.toLowerCase()}" x1="${x}" y1="${y}" x2="50" y2="50"/>`).join('')}</svg><div class="health-core"><b>KZEL CORE</b><span>${serviceOverall()}</span></div>${nodes.map(([name,x,y])=>{const sv=state.services[name];return `<button class="health-node ${sv.status.toLowerCase()}" style="left:${x}%;top:${y}%" data-cycle-service="${name}"><b>${name}</b><span>${sv.status}</span><small>${sv.latency}ms${sv.cooldown?` · cooldown ${sv.cooldown}s`:''}</small></button>`}).join('')}</div><div class="section-head"><h2>IMPACT + COMMANDER RESPONSE</h2></div><div class="service-grid">${Object.entries(state.services).map(([name,sv])=>`<div class="service ${sv.status.toLowerCase()}"><div class="service-top"><b>${name}</b>${tag(sv.status,statusClass(sv.status))}</div><p>${serviceImpact(name,sv)}</p><small>${sv.calls} calls · ${sv.errors} errors · ${sv.latency}ms</small>${sv.status==='RATE_LIMITED'&&sv.cooldown?progressBar(Math.max(0,100-sv.cooldown/1.2)):''}</div>`).join('')}</div><div class="section-head"><h2>INCIDENT RESPONSE</h2><span class="note">Mobile prioritizes impact and current action.</span></div><div class="incident-grid">${state.incidents.map(i=>{const cls=i.severity==='CRITICAL'?'critical':i.status==='RESOLVED'?'resolved':'active';return `<article class="incident-card ${cls}"><div class="incident-top"><div><span class="incident-meta">${i.severity||'MEDIUM'} · DETECTED ${i.time||'—'}</span><h3>${escapeHtml(i.service)} · ${escapeHtml(i.title)}</h3></div>${tag(i.status,statusClass(i.status))}</div><p class="incident-summary">${escapeHtml(i.detail||'No incident detail.')}</p><div class="incident-facts"><div class="incident-fact"><span>IMPACT</span><b>${escapeHtml(serviceImpact(i.service,state.services[i.service]||{status:'HEALTHY'}))}</b></div><div class="incident-fact"><span>CURRENT ACTION</span><b>${i.status==='RESOLVED'?'Monitoring validation':'FORGE diagnosis + Commander coordination'}</b></div><div class="incident-fact"><span>ROOT CAUSE</span><b>${i.status==='RESOLVED'?'Captured in incident evidence':'Under investigation'}</b></div><div class="incident-fact"><span>MEMORY</span><b>${i.status==='RESOLVED'?'Preserved / linked':'Create after validation'}</b></div></div></article>`}).join('')||`<div class="card">No incident history.</div>`}</div>`;
+}
+
 ensureAutonomyState();save();
 
 // Dynamic-injection bootstrap for GitHub Pages v5 wrapper.
 resetState=function(){state=initialState();ensureAutonomyState();save();stopSimulation();render();toast("Demo reset to Autonomous OS baseline")};
 ensureAutonomyState();
-document.title="KZEL Autonomous AI Operating System — Prototype";
+document.title="KZEL Autonomous AI Operating System v5.3 — Prototype";
 save();
 render();
 if(state.simRunning){stopSimulation();startSimulation();}
